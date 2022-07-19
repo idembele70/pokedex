@@ -22,7 +22,6 @@ const Cards = ({ pokemonsList }) => {
     setLoading(true);
     const newPokemons = pokemonsList;
     const timer = setTimeout(() => {
-      console.log("sti");
       setPokemons(getPokemons(newPokemons.slice(0, limit + 15)));
       setLoading(false);
     }, 2000);
