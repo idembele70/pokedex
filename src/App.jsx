@@ -1,11 +1,13 @@
+import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
-import Cards from "./components/card";
-import PokemonsSuggest from "./components/PokemonsSuggest";
-import InputContainer from "./components/tools/InputContainer";
 import Navbar from "./components/tools/Navbar";
+import Home from "./pages/Home";
+import Liked from "./pages/Liked";
 
 const Container = styled.div`
   max-width: 985px;
+  width: 100%;
+  min-height: 100vh;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -17,8 +19,10 @@ function App() {
   return (
     <Container>
       <Navbar />
-      <InputContainer />
-      <PokemonsSuggest />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/liked" element={<Liked />} />
+      </Routes>
     </Container>
   );
 }

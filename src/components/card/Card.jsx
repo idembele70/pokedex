@@ -1,8 +1,29 @@
-import React, { useMemo } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components';
-import { type } from '@testing-library/user-event/dist/type';
-import { loading$ } from '../../rxjs/rxjs';
+import PropTypes from "prop-types";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+import { likedLength$ } from "../../rxjs/rxjs";
+import {
+  addToLocalStorage,
+  getFromLocalStorage,
+} from "../../utils/globalFunctions";
+import ThumbUp from "../tools/ThumbUp";
+
+const hidenCard = keyframes`
+  0% {
+    display: flex;
+    opacity: 1;
+  }
+  90% {
+    display: flex;
+    opacity: 0;
+  }
+  100% {
+    display: none;
+    opacity: 0;
+  }
+`;
+
 const Container = styled.div`
   width: 90vw;
   max-width: 307px;
@@ -10,7 +31,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   box-shadow: 0px 4px 20px -3px rgba(0, 0, 0, 0.1);
   border-radius: 18px;
   min-height: 168px;
@@ -18,21 +39,24 @@ const Container = styled.div`
   padding: 25px 35px 25px 25px;
   box-sizing: border-box;
   position: relative;
+  opacity: ${({ opacity }) => opacity};
+  display: ${({ display }) => display};
+  transition: all 350ms linear;
 `;
 const Left = styled.div`
-flex:1;
+  flex: 1;
   max-height: 117px;
   max-width: 126px;
   display: flex;
   justify-content: center;
-  `;
+`;
 const Image = styled.img`
-  max-height:100%;
-  max-width:100%;
+  max-height: 100%;
+  max-width: 100%;
   object-fit: contain;
 `;
 const Right = styled.div`
-  flex:1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -40,23 +64,23 @@ const Right = styled.div`
   gap: 6px;
 `;
 const RightTop = styled.div`
-  display:flex;
+  display: flex;
   gap: 7px;
   & > * {
-  font-size: 12px;
-  line-height: 14px;
-  letter-spacing: 0.04em;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 0.04em;
     margin: 0;
   }
 `;
 const Id = styled.h5`
-color: #9E9E9E;
-font-weight: 900;
+  color: #9e9e9e;
+  font-weight: 900;
 `;
 const Name = styled.h5`
-text-transform: uppercase;
-color: #000000;
-font-weight: 900;
+  text-transform: uppercase;
+  color: #000000;
+  font-weight: 900;
 `;
 const RightBottom = styled.div`
   display: flex;
@@ -67,21 +91,21 @@ const RightBottom = styled.div`
   }
 `;
 const Type = styled.h6`
-  background-color: #${props => props.bgColor};;
+  background-color: #${(props) => props.bgColor};
   border-radius: 9.5px;
   font-size: 8px;
   line-height: 9px;
   letter-spacing: 0.04em;
-  color:#FFFFFF;
+  color: #ffffff;
   padding: 4px 10px;
   text-align: center;
   text-transform: uppercase;
   font-weight: 900;
 `;
 const IconContainer = styled.div`
-  position:absolute;
-  background-color: #FFFFFF;
-  border: 1px solid #E4E4E4;
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #e4e4e4;
   box-sizing: border-box;
   bottom: 10px;
   right: 10px;
@@ -91,42 +115,95 @@ const IconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${props => props.liked ? "linear-gradient(202.48deg, #F2F2F2 7.57%, #CFCFCF 90.41%)" : "transparent"};
+  cursor: pointer;
+  transition: all 350 linear;
+  background: ${(props) =>
+    props.liked
+      ? "linear-gradient(202.48deg, #F2F2F2 7.57%, #CFCFCF 90.41%)"
+      : "transparent"};
+  &:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
 `;
-const Icon = styled.img`
-`;
-const Card = props => {
-  const { liked, img, alt, id, name, types } = props
-  const left = useMemo(() => <Left>
-    <Image src={img} alt={alt} />
-  </Left>, [img, alt])
-  const rightTop = useMemo(() =>
-    <RightTop>
-      <Id>{id}</Id>
-      <Name>{name}</Name>
-    </RightTop>, [id, name])
+const Card = (props) => {
+  const { img, alt, id, name, types } = props;
 
-  const rightbottom = useMemo(() =>
-    <RightBottom>
-      {
-        types.map(
-          type => <Type key={type.name} bgColor={type.color}>
+  const handleError = (e) => {
+    e.preventDefault();
+    e.target.src = `${process.env.PUBLIC_URL}/assets/mock/error404.png`;
+  };
+  const left = useMemo(
+    () => (
+      <Left>
+        <Image onError={handleError} src={img} alt={alt} />
+      </Left>
+    ),
+    [img, alt]
+  );
+  const rightTop = useMemo(
+    () => (
+      <RightTop>
+        <Id>{id}</Id>
+        <Name>{name}</Name>
+      </RightTop>
+    ),
+    [id, name]
+  );
+
+  const rightbottom = useMemo(
+    () => (
+      <RightBottom>
+        {types.map((type) => (
+          <Type key={type.name} bgColor={type.color}>
             {type.name}
           </Type>
-        )
-      }
-    </RightBottom>, [types])
-
-
-  const icons = useMemo(() =>
-    <IconContainer liked={liked} >
-      {liked ?
-        <Icon src={`${process.env.PUBLIC_URL}/assets/icons/thumbUpWhite.png`} alt="thumb-up-grey" />
-        : <Icon src={`${process.env.PUBLIC_URL}/assets/icons/thumbUpGrey.png`} alt="thumb-up-white" />}
-    </IconContainer>
-    , [liked])
+        ))}
+      </RightBottom>
+    ),
+    [types]
+  );
+  const [liked, setLiked] = useState(false);
+  const location = useLocation();
+  const [opacity, setOpacity] = useState(1);
+  const [display, setdisplay] = useState("flex");
+  const handleLike = useCallback(() => {
+    if (location.pathname === "/liked" && liked) {
+      setOpacity(0);
+      setTimeout(() => {
+        setdisplay("none");
+      }, 400);
+    } else setOpacity(1);
+    setLiked(!liked);
+    const likedPokemons = getFromLocalStorage("likedPokemons");
+    if (likedPokemons) {
+      const isLiked = likedPokemons.findIndex((v) => v === id) !== -1;
+      if (isLiked) {
+        const newLikedPokemons = likedPokemons.filter((v) => v !== id);
+        addToLocalStorage(newLikedPokemons);
+      } else addToLocalStorage([...likedPokemons, id]);
+    } else {
+      addToLocalStorage([id]);
+    }
+    console.log(getFromLocalStorage("likedPokemons")?.length);
+    likedLength$.next(getFromLocalStorage("likedPokemons")?.length || 0);
+  }, [liked, id, location]);
+  useEffect(() => {
+    const likedPokemons = getFromLocalStorage("likedPokemons");
+    if (likedPokemons) {
+      const isLiked = likedPokemons?.findIndex((pid) => pid === id) !== -1;
+      setLiked(isLiked);
+    }
+  }, [id]);
+  const icons = useMemo(
+    () => (
+      <IconContainer onClick={handleLike} liked={liked}>
+        <ThumbUp liked={liked} />
+      </IconContainer>
+    ),
+    [liked, handleLike]
+  );
   return (
-    <Container>
+    <Container opacity={opacity} display={display}>
       {left}
       <Right>
         {rightTop}
@@ -134,20 +211,18 @@ const Card = props => {
       </Right>
       {icons}
     </Container>
-  )
-}
+  );
+};
 
 Card.propTypes = {
-  liked: PropTypes.bool,
   img: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   types: PropTypes.array.isRequired,
-  alt: PropTypes.string.isRequired
-
-}
+  alt: PropTypes.string.isRequired,
+};
 Card.defaultProps = {
-  liked: false
-}
+  liked: false,
+};
 
-export default React.memo(Card)
+export default React.memo(Card);

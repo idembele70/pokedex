@@ -61684,4 +61684,11 @@ const filterPokemons = (inputName, value) => {
   return filteredPokemons;
 };
 
-export { data, getPokemons, filterPokemons };
+const addToLocalStorage = (data) => localStorage.setItem("likedPokemons", JSON.stringify(data));
+
+const getFromLocalStorage = (name) => JSON.parse(localStorage.getItem(name));
+
+const filterPokemonsByIds = (d,ids) =>
+  d.filter(pokemon=>ids.includes(pokemon.id) )
+
+export { data, getPokemons, filterPokemons, addToLocalStorage,getFromLocalStorage, filterPokemonsByIds };

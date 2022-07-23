@@ -4,12 +4,11 @@ import {
   useSubscription,
 } from "observable-hooks";
 import React from "react";
-import { of, startWith, switchMap, timer } from "rxjs";
-import { searchTerm$ } from "../rxjs/rxjs";
-import { filterPokemons } from "../utils/utils";
+import { of, switchMap, tap, timer } from "rxjs";
+import { loading$, searchTerm$ } from "../rxjs/rxjs";
+import { filterPokemons } from "../utils/globalFunctions";
 import Cards from "./card";
-import StateDefault from "./StateDefault";
-import StateLoading from "./StateLoading";
+import StateDefault from "./tools/StateDefault";
 
 const PokemonsSuggest = (props) => {
   const [searchInfo, setSearchInfo] = React.useState({
@@ -19,17 +18,17 @@ const PokemonsSuggest = (props) => {
   const search$ = useObservable(
     (e$) =>
       e$.pipe(
+        tap(() => loading$.next(true)),
         switchMap(([searchInfo]) => {
           if (searchInfo.value)
-            return timer(750).pipe(
+            return timer(0).pipe(
               switchMap(() => {
                 const searchedPokemons = filterPokemons(
                   searchInfo?.name,
                   searchInfo?.value
                 );
                 return of(<Cards pokemonsList={searchedPokemons} />);
-              }),
-              startWith(<StateLoading />)
+              })
             );
           else return of(<StateDefault />);
         })

@@ -3,11 +3,12 @@ import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 
 const LoaderContainer = styled.div`
-  //width: 100vw;
-  //height: 100vh;
+  flex: 0 0 100%;
+  height: 130px;
   z-index: 2;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding-top: 50px;
   opacity: ${(props) => props.opacity};
 `;

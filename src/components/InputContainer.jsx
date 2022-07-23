@@ -1,9 +1,9 @@
 import { useObservableCallback, useSubscription } from "observable-hooks";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { debounceTime, distinctUntilChanged, map, tap } from "rxjs";
 import styled from "styled-components";
-import { searchTerm$ } from "../../rxjs/rxjs";
-import { mobile } from "./responsive";
+import { searchTerm$ } from "../rxjs/rxjs";
+import * as responsive from "../utils/responsive";
 const SearchContainer = styled.form`
   display: flex;
   flex-wrap: wrap;
@@ -12,7 +12,7 @@ const SearchContainer = styled.form`
   max-width: 675px;
   gap: 18px;
   margin-bottom: 60px;
-  ${mobile({ maxWidth: 308 })}
+  ${responsive.mobile({ maxWidth: 308 })}
 `;
 const Right = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ const Right = styled.div`
   justify-content: center;
   gap: 18px;
   width: 250px;
-  ${mobile({ width: 308 })}
+  ${responsive.mobile({ width: 308 })}
 `;
 const Input = styled.input`
   background-color: #ffffff;
@@ -39,34 +39,54 @@ const Input = styled.input`
   &[name="name"] {
     width: 90vw;
     max-width: 405px;
-    ${mobile({ maxWidth: 308 })}
+    ${responsive.mobile({ maxWidth: 308 })}
   }
   &[name="number"] {
     width: 100px;
   }
   &[name="type"] {
     width: 130px;
-    ${mobile({ width: 186 })};
+    ${responsive.mobile({ width: 186 })};
   }
   &:focus {
     outline: 2px solid rgba(0, 0, 0, 0.15);
   }
 `;
 const InputContainer = () => {
+  const nameEl = useRef(null);
+  const numberEl = useRef(null);
+  const typeEl = useRef(null);
   const [handleSearch, search$] = useObservableCallback((e$) =>
     e$.pipe(
-      debounceTime(300),
+      debounceTime(500),
       map((e) => ({
         name: e.target.name,
         value: e.target.value,
       })),
+      tap((v) => {
+        switch (v.name) {
+          case "name":
+            numberEl.current.value = "";
+            typeEl.current.value = "";
+            break;
+          case "number":
+            nameEl.current.value = "";
+            typeEl.current.value = "";
+            break;
+          case "type":
+            nameEl.current.value = "";
+            numberEl.current.value = "";
+            break;
+          default:
+            break;
+        }
+      }),
       distinctUntilChanged((prev, cur) => prev.value === cur.value)
     )
   );
   useSubscription(search$, (v) => {
     searchTerm$.next(v);
   });
-  useEffect(() => {}, []);
   return (
     <SearchContainer>
       <Input
@@ -74,6 +94,7 @@ const InputContainer = () => {
         type="search"
         placeholder="Search"
         onChange={handleSearch}
+        ref={nameEl}
       />
       <Right>
         <Input
@@ -81,12 +102,14 @@ const InputContainer = () => {
           type="search"
           placeholder="Number"
           onChange={handleSearch}
+          ref={numberEl}
         />
         <Input
           name="type"
           type="search"
           placeholder="Type"
           onChange={handleSearch}
+          ref={typeEl}
         />
       </Right>
     </SearchContainer>
