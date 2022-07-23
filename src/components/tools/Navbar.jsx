@@ -41,7 +41,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const handleNavigate = (link) => {
-    navigate(link);
+    navigate(`/pokedex/${link}`);
   };
   const [isActive, setIsActive] = useState("home");
   useEffect(() => {
