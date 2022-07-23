@@ -30,7 +30,7 @@ const Cards = ({ pokemonsList }) => {
   const [limit, setLimit] = useState(0);
   const [pokemons, setPokemons] = useState(null);
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  const isHomePage = location.pathname === "/pokedex";
   useEffect(() => {
     const newPokemons = pokemonsList;
     const timer = setTimeout(() => {

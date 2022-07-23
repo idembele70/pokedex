@@ -20,8 +20,8 @@ function App() {
     <Container>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/liked" element={<Liked />} />
+        <Route path="/pokedex" element={<Home />} />
+        <Route path="/pokedex/liked" element={<Liked />} />
       </Routes>
     </Container>
   );
