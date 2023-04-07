@@ -1,6 +1,6 @@
 import React from "react";
-import InputContainer from "../components/InputContainer";
-import PokemonsSuggest from "../components/PokemonsSuggest";
+import InputContainer from "../InputContainer";
+import PokemonsSuggest from "../PokemonsSuggest";
 
 const Home = () => {
   return (

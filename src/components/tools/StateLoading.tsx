@@ -2,7 +2,10 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 
-const LoaderContainer = styled.div`
+interface LoaderContainerProps {
+  opacity: number;
+}
+const LoaderContainer = styled.div<LoaderContainerProps>`
   flex: 0 0 100%;
   height: 130px;
   z-index: 2;
@@ -24,16 +27,13 @@ const Loader = styled.div`
   height: 50px;
   animation: ${spin} 2s linear infinite;
 `;
-const StateLoading = ({ opacity }) => (
+type StateLoadingProps = {
+  opacity: boolean;
+};
+const StateLoading: React.FC<StateLoadingProps> = ({ opacity }) => (
   <LoaderContainer opacity={opacity ? 1 : 0}>
     <Loader />
   </LoaderContainer>
 );
 
-StateLoading.propTypes = {
-  opactiy: PropTypes.bool,
-};
-StateLoading.defaultProps = {
-  opacity: true,
-};
 export default StateLoading;

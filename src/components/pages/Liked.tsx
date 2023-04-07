@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Cards from "../components/card";
+import Cards from "../card";
 import {
   data,
   filterPokemonsByIds,
   getFromLocalStorage,
-} from "../utils/globalFunctions";
+} from "../../utils/globalFunctions";
 
-import { loading$ } from "../rxjs/rxjs";
 const Liked = () => {
-  const [likedPokemons, setLikedPokemons] = useState([]);
+  const [likedPokemons, setLikedPokemons] = useState<any[]>([]);
 
   useEffect(() => {
-    loading$.next(true);
     const ids = getFromLocalStorage("likedPokemons");
     if (ids?.length) {
       const likedDB = filterPokemonsByIds(data, ids);

@@ -2,7 +2,6 @@ import { useObservableCallback, useSubscription } from "observable-hooks";
 import React, { useEffect, useRef } from "react";
 import { debounceTime, distinctUntilChanged, map, tap } from "rxjs";
 import styled from "styled-components";
-import { searchTerm$ } from "../rxjs/rxjs";
 import * as responsive from "../utils/responsive";
 const SearchContainer = styled.form`
   display: flex;
@@ -56,44 +55,14 @@ const InputContainer = () => {
   const nameEl = useRef(null);
   const numberEl = useRef(null);
   const typeEl = useRef(null);
-  const [handleSearch, search$] = useObservableCallback((e$) =>
-    e$.pipe(
-      debounceTime(500),
-      map((e) => ({
-        name: e.target.name,
-        value: e.target.value,
-      })),
-      tap((v) => {
-        switch (v.name) {
-          case "name":
-            numberEl.current.value = "";
-            typeEl.current.value = "";
-            break;
-          case "number":
-            nameEl.current.value = "";
-            typeEl.current.value = "";
-            break;
-          case "type":
-            nameEl.current.value = "";
-            numberEl.current.value = "";
-            break;
-          default:
-            break;
-        }
-      }),
-      distinctUntilChanged((prev, cur) => prev.value === cur.value)
-    )
-  );
-  useSubscription(search$, (v) => {
-    searchTerm$.next(v);
-  });
+
   return (
     <SearchContainer>
       <Input
         name="name"
         type="search"
         placeholder="Search"
-        onChange={handleSearch}
+        onChange={() => {}}
         ref={nameEl}
       />
       <Right>
@@ -101,14 +70,14 @@ const InputContainer = () => {
           name="number"
           type="search"
           placeholder="Number"
-          onChange={handleSearch}
+          onChange={() => {}}
           ref={numberEl}
         />
         <Input
           name="type"
           type="search"
           placeholder="Type"
-          onChange={handleSearch}
+          onChange={() => {}}
           ref={typeEl}
         />
       </Right>

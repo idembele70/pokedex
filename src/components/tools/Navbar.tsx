@@ -16,31 +16,35 @@ const Container = styled.header`
   ${mobile({ maxWidth: 308, gap: "10px 25px" })}
 `;
 
-const Button = styled.nav`
+interface ButtonProps {
+  isactive: boolean;
+}
+
+const Button = styled.nav<ButtonProps>`
   cursor: pointer;
   font-size: 14px;
   line-height: 16px;
   font-weight: 700;
   text-transform: uppercase;
   border-radius: 18px;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.palette.common.white};
   padding: 7px 12%;
   letter-spacing: 0.345rem;
-  color: #000000;
+  color: ${({ theme }) => theme.palette.common.black};
   transition: all 350ms linear;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.15);
-    box-shadow: 0 4px 16px -3px #ffffff;
+    background-color: ${({ theme }) => theme.palette.secondary.main};
+    box-shadow: 0 4px 16px -3px ${({ theme }) => theme.palette.common.white};
   }
-  box-shadow: ${(props) =>
-    props.isActive ? "0px 4px 16px -3px rgba(0, 0, 0, 0.15)" : ""};
+  box-shadow: ${({ isactive, theme }) =>
+    isactive ? `0px 4px 16px -3px ${theme.palette.secondary.main}` : ""};
   ${mobile({ padding: "7px 8%" })}
 `;
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const handleNavigate = (link) => {
+  const handleNavigate = (link: string) => {
     navigate(`/pokedex/${link}`);
   };
   const [isActive, setIsActive] = useState("home");
@@ -50,11 +54,11 @@ const Navbar = () => {
   }, [location]);
   return (
     <Container>
-      <Button isActive={isActive === "home"} onClick={() => handleNavigate("")}>
+      <Button isactive={isActive === "home"} onClick={() => handleNavigate("")}>
         Pokedex
       </Button>
       <Button
-        isActive={isActive === "liked"}
+        isactive={isActive === "liked"}
         onClick={() => handleNavigate("liked")}
       >
         Liked

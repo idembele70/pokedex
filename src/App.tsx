@@ -1,8 +1,9 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "./components/tools/Navbar";
-import Home from "./pages/Home";
-import Liked from "./pages/Liked";
+import Home from "./components/pages/Home";
+import Liked from "./components/pages/Liked";
 
 const Container = styled.div`
   max-width: 985px;
@@ -20,11 +21,23 @@ function App() {
     <Container>
       <Navbar />
       <Routes>
-        <Route path="/pokedex/" element={<Home />} />
-        <Route path="/pokedex/liked" element={<Liked />} />
+        <Route path="/" element={<Home />} />
+        <Route path="liked/" element={<Liked />} />
       </Routes>
     </Container>
   );
 }
 
 export default App;
+
+/* 
+
+ <Container>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="liked/" element={<Liked />} />
+      </Routes>
+    </Container>
+    
+*/

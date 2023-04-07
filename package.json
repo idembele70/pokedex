@@ -7,6 +7,10 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
     "gh-pages": "^4.0.0",
     "normalize.css": "^8.0.1",
     "observable-hooks": "^4.2.0",
@@ -16,6 +20,7 @@
     "react-scripts": "5.0.0",
     "rxjs": "^7.5.5",
     "styled-components": "^5.3.5",
+    "typescript": "^5.0.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -43,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.26"
   }
 }

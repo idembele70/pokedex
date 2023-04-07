@@ -1,12 +1,6 @@
-import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { likedLength$ } from "../../rxjs/rxjs";
-import {
-  addToLocalStorage,
-  getFromLocalStorage,
-} from "../../utils/globalFunctions";
 import ThumbUp from "../tools/ThumbUp";
 
 const hidenCard = keyframes`
@@ -23,8 +17,11 @@ const hidenCard = keyframes`
     opacity: 0;
   }
 `;
-
-const Container = styled.div`
+interface ContainerProps {
+  opacity: number;
+  display: string;
+}
+const Container = styled.div<ContainerProps>`
   width: 90vw;
   max-width: 307px;
   display: flex;
@@ -90,8 +87,11 @@ const RightBottom = styled.div`
     margin: 0;
   }
 `;
-const Type = styled.h6`
-  background-color: #${(props) => props.bgColor};
+interface TypeProps {
+  bgColor: string;
+}
+const Type = styled.h6<TypeProps>`
+  background-color: #${({ bgColor }) => bgColor};
   border-radius: 9.5px;
   font-size: 8px;
   line-height: 9px;
@@ -102,7 +102,10 @@ const Type = styled.h6`
   text-transform: uppercase;
   font-weight: 900;
 `;
-const IconContainer = styled.div`
+interface IconContainerProps {
+  liked: boolean;
+}
+const IconContainer = styled.div<IconContainerProps>`
   position: absolute;
   background-color: #ffffff;
   border: 1px solid #e4e4e4;
@@ -117,20 +120,31 @@ const IconContainer = styled.div`
   justify-content: center;
   cursor: pointer;
   transition: all 350 linear;
-  background: ${(props) =>
-    props.liked
+  background: ${({ liked }) =>
+    liked
       ? "linear-gradient(202.48deg, #F2F2F2 7.57%, #CFCFCF 90.41%)"
       : "transparent"};
   &:hover {
     background: rgba(0, 0, 0, 0.5);
   }
 `;
-const Card = (props) => {
+interface ITypeItem {
+  name: string;
+  color: string;
+}
+type CardProps = {
+  img: string;
+  alt: string;
+  id: string;
+  name: string;
+  types: Array<ITypeItem>;
+};
+const Card: React.FC<CardProps> = (props) => {
   const { img, alt, id, name, types } = props;
 
-  const handleError = (e) => {
+  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.preventDefault();
-    e.target.src = `${process.env.PUBLIC_URL}/assets/mock/error404.png`;
+    e.currentTarget.src = `${process.env.PUBLIC_URL}/assets/mock/error404.png`;
   };
   const left = useMemo(
     () => (
@@ -166,41 +180,14 @@ const Card = (props) => {
   const location = useLocation();
   const [opacity, setOpacity] = useState(1);
   const [display, setdisplay] = useState("flex");
-  const handleLike = useCallback(() => {
-    if (location.pathname === "/liked" && liked) {
-      setOpacity(0);
-      setTimeout(() => {
-        setdisplay("none");
-      }, 400);
-    } else setOpacity(1);
-    setLiked(!liked);
-    const likedPokemons = getFromLocalStorage("likedPokemons");
-    if (likedPokemons) {
-      const isLiked = likedPokemons.findIndex((v) => v === id) !== -1;
-      if (isLiked) {
-        const newLikedPokemons = likedPokemons.filter((v) => v !== id);
-        addToLocalStorage(newLikedPokemons);
-      } else addToLocalStorage([...likedPokemons, id]);
-    } else {
-      addToLocalStorage([id]);
-    }
-    console.log(getFromLocalStorage("likedPokemons")?.length);
-    likedLength$.next(getFromLocalStorage("likedPokemons")?.length || 0);
-  }, [liked, id, location]);
-  useEffect(() => {
-    const likedPokemons = getFromLocalStorage("likedPokemons");
-    if (likedPokemons) {
-      const isLiked = likedPokemons?.findIndex((pid) => pid === id) !== -1;
-      setLiked(isLiked);
-    }
-  }, [id]);
+
   const icons = useMemo(
     () => (
-      <IconContainer onClick={handleLike} liked={liked}>
+      <IconContainer onClick={() => {}} liked={liked}>
         <ThumbUp liked={liked} />
       </IconContainer>
     ),
-    [liked, handleLike]
+    [liked]
   );
   return (
     <Container opacity={opacity} display={display}>
@@ -212,17 +199,6 @@ const Card = (props) => {
       {icons}
     </Container>
   );
-};
-
-Card.propTypes = {
-  img: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  types: PropTypes.array.isRequired,
-  alt: PropTypes.string.isRequired,
-};
-Card.defaultProps = {
-  liked: false,
 };
 
 export default React.memo(Card);

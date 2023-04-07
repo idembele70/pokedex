@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-
-const ThumbUp = ({ liked }) => (
+type ThumbUpProps = {
+  liked: boolean;
+};
+const ThumbUp: React.FC<ThumbUpProps> = ({ liked }) => (
   <svg
     width="15"
     height="15"
@@ -16,10 +18,4 @@ const ThumbUp = ({ liked }) => (
   </svg>
 );
 
-ThumbUp.propTypes = {
-  liked: PropTypes.bool,
-};
-ThumbUp.defaultProps = {
-  liked: false,
-};
 export default ThumbUp;
