@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { mobile } from "../../utils/responsive";
+import { mobile } from "../../../utils/responsive";
 
 const Container = styled.header`
   padding: 30px 0;
@@ -35,20 +35,13 @@ const NavItem = styled(NavLink)`
   }
   &.active {
     box-shadow: ${({ theme }) =>
-      `0px 4px 16px -3px ${theme.palette.secondary.main}`};
+    `0px 4px 16px -3px ${theme.palette.secondary.main}`};
   }
   ${mobile({ padding: "7px 8%" })}
 `;
 
-const Navbar = () => {
-  return (
-    <Container>
-      <Nav>
-        <NavItem to="/">Pokedex</NavItem>
-        <NavItem to="/liked">Liked</NavItem>
-      </Nav>
-    </Container>
-  );
-};
-
-export default Navbar;
+export {
+  Container,
+  Nav,
+  NavItem
+}
