@@ -128,16 +128,16 @@ const IconContainer = styled.div<IconContainerProps>`
     background: rgba(0, 0, 0, 0.5);
   }
 `;
-interface ITypeItem {
+export type ITypes = {
   name: string;
   color: string;
-}
+};
 type CardProps = {
   img: string;
   alt: string;
   id: string;
   name: string;
-  types: Array<ITypeItem>;
+  types: Array<ITypes>;
 };
 const Card: React.FC<CardProps> = (props) => {
   const { img, alt, id, name, types } = props;

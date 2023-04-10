@@ -1,12 +1,13 @@
 import React from "react";
-import InputContainer from "../InputContainer";
-import PokemonsSuggest from "../PokemonsSuggest";
+import SearchContainer from "../Form/SearchContainer";
+import Cards from "../Cards";
+import HomeCard from "../Cards/HomeCard";
 
 const Home = () => {
   return (
     <>
-      <InputContainer />
-      <PokemonsSuggest />
+      <SearchContainer />
+      <HomeCard />
     </>
   );
 };

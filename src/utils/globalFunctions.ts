@@ -1,4 +1,3 @@
-import Card from "../components/card/Card";
 
 const data = [
   {
@@ -61606,9 +61605,29 @@ const data = [
   },
 ];
 
-const getPokemons = (data) => {
-  return data.map(({ id, name, img, type }) => {
-    const types = type.map((t) => {
+
+
+type DefaultDataProps = {
+  img: string;
+  id: string;
+  name: string;
+}
+
+type basicDataProps = DefaultDataProps & {
+  type: string[]
+}
+interface ITypes {
+  color: string;
+  name: string;
+}
+export type PokemonItemProps = DefaultDataProps & {
+  types: ITypes[]
+  alt: string;
+}
+const getPokemons = <T extends basicDataProps>(data: T[]) => {
+  const newData: PokemonItemProps[] = []
+  data.forEach(({ id, name, img, type }) => {
+    const types = type?.map((t) => {
       let color = null;
       switch (t) {
         case "Electric":
@@ -61666,11 +61685,12 @@ const getPokemons = (data) => {
       return { color, name: t };
     });
     const cardProps = { id, name, img, types, alt: name };
-    return <Card key={id} {...cardProps} />;
+    newData.push(cardProps)
   });
+  return newData
 };
 
-const filterPokemons = (inputName, value) => {
+/* const filterPokemons = (inputName, value) => {
   let filteredPokemons = [];
   if (inputName === "name") {
     filteredPokemons = data.filter((p) => p.name.toLowerCase().includes(value));
@@ -61684,11 +61704,19 @@ const filterPokemons = (inputName, value) => {
   return filteredPokemons;
 };
 
-const addToLocalStorage = (data) => localStorage.setItem("likedPokemons", JSON.stringify(data));
+const addToLocalStorage = (data) =>
+  localStorage.setItem("likedPokemons", JSON.stringify(data));
 
 const getFromLocalStorage = (name) => JSON.parse(localStorage.getItem(name));
 
-const filterPokemonsByIds = (d,ids) =>
-  d.filter(pokemon=>ids.includes(pokemon.id) )
+const filterPokemonsByIds = (d, ids) =>
+  d.filter((pokemon) => ids.includes(pokemon.id)); */
 
-export { data, getPokemons, filterPokemons, addToLocalStorage,getFromLocalStorage, filterPokemonsByIds };
+export {
+  data,
+  getPokemons,
+  /* filterPokemons,
+  addToLocalStorage,
+  getFromLocalStorage,
+  filterPokemonsByIds, */
+};
