@@ -14,8 +14,6 @@ const Cards: React.FC<CardsProps> = ({ pokemonsList }) => {
   const location = useLocation();
   const isHomePage = location.pathname === "/pokedex";
 
-  const [isSearching, setIsSearching] = useState(false);
-
   const likedLength = null;
   const [notFoundOpacity, setNotFoundOpacity] = useState(0);
   useEffect(() => {
@@ -28,18 +26,8 @@ const Cards: React.FC<CardsProps> = ({ pokemonsList }) => {
   return (
     <Container>
       {pokemonsList.length && !isSearching ? <Wrapper>{pokemons}</Wrapper> : ""}
-      {pokemonsList.length === 0 && !loading && !isSearching && isHomePage ? (
-        <NotFound notFoundOpacity={1}>
-          Sorry but nothing matched your search terms. Please try again with
-          some different keywords
-        </NotFound>
-      ) : (
-        ""
-      )}
       {likedLength === 0 && !loading && !isHomePage ? (
-        <NotFound notFoundOpacity={notFoundOpacity}>
-          It seems like you don't like any pokemons
-        </NotFound>
+        <NotFound>It seems like you don't like any pokemons</NotFound>
       ) : (
         ""
       )}
