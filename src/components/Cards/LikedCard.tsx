@@ -7,6 +7,7 @@ import {
 import Loader from "../shared/Loader";
 import CardItem from "./CardItem";
 import { Container, NotFound, Wrapper } from "./Cards.style";
+import { useAppContext } from "../context/AppContext";
 
 const LikedCard = () => {
   const [pokemonList, setPokemonList] = useState<PokemonItemProps[]>([]);
@@ -53,18 +54,21 @@ const LikedCard = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
-
+  // check if there is no child
+  const [notFound, setNotFound] = useState(false);
+  const { isNoPokemonLiked } = useAppContext();
+  useEffect(() => {
+    setNotFound(isNoPokemonLiked);
+  }, [isNoPokemonLiked]);
   return (
     <Container>
-      {!!pokemonList.length && (
-        <Wrapper>
-          {pokemonList.map((props) => (
-            <CardItem key={props.id} {...props} />
-          ))}
-        </Wrapper>
-      )}
+      <Wrapper className="liked-wrapper">
+        {pokemonList.map((props) => (
+          <CardItem key={props.id} {...props} />
+        ))}
+      </Wrapper>
       <Loader opacity={loading} />
-      {pokemonList.length === 0 && !loading ? (
+      {(pokemonList.length === 0 || notFound) && !loading ? (
         <NotFound>You haven't liked any Pokemon yet.</NotFound>
       ) : (
         ""

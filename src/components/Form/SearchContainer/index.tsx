@@ -2,7 +2,7 @@ import React, { useContext, useRef } from "react";
 import { Container, Input, Right } from "./SearchContainer.style";
 import { useObservableCallback, useSubscription } from "observable-hooks";
 import { debounceTime, distinctUntilChanged, map, tap } from "rxjs";
-import { SearchContext } from "../../context/SearchContext";
+import { useAppContext } from "../../context/AppContext";
 
 const SearchContainer = () => {
   interface ISearch {
@@ -46,7 +46,7 @@ const SearchContainer = () => {
     )
   );
 
-  const { setCtxValue } = useContext(SearchContext);
+  const { setCtxValue } = useAppContext();
   useSubscription(search$, ({ value, name }) => {
     setCtxValue(value, name);
   });

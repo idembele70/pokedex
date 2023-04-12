@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Liked from "../pages/Liked";
-import SearchContextProvider from "../context/SearchContext";
+import AppContextProvider from "../context/AppContext";
 
 const RouteWrapper = () => {
   return (
-    <SearchContextProvider>
+    <AppContextProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="liked/" element={<Liked />} />
       </Routes>
-    </SearchContextProvider>
+    </AppContextProvider>
   );
 };
 

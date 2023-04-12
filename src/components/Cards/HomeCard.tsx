@@ -7,19 +7,20 @@ import {
 import Loader from "../shared/Loader";
 import CardItem from "./CardItem";
 import { Container, NotFound, Wrapper } from "./Cards.style";
-import { useSearchContext } from "../context/SearchContext";
+import { useAppContext } from "../context/AppContext";
 
 const HomeCard = () => {
   const [pokemonList, setPokemonList] = useState<PokemonItemProps[]>([]);
   const [limit, setLimit] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
-  const { searchTerm, searchName } = useSearchContext();
+  const { searchTerm, searchName, setIsNoPokemonLiked } = useAppContext();
   const [notFound, setNotFound] = useState(false);
   useEffect(() => {
     setLimit(0);
     setIsSearching(true);
     setNotFound(false);
+    setIsNoPokemonLiked(false);
   }, [searchTerm]);
   // get pokemon list by search term or get all
   useEffect(() => {
@@ -73,12 +74,10 @@ const HomeCard = () => {
   }, [handleScroll]);
   return (
     <Container>
-      {!loading && !isSearching && !notFound && (
-        <Wrapper>
-          {!isSearching &&
-            pokemonList.map((props, idx) => <CardItem key={idx} {...props} />)}
-        </Wrapper>
-      )}
+      <Wrapper>
+        {!isSearching &&
+          pokemonList.map((props, idx) => <CardItem key={idx} {...props} />)}
+      </Wrapper>
       <Loader opacity={loading || isSearching} />
       {(pokemonList.length === 0 || notFound) && !loading && !isSearching ? (
         <NotFound>

@@ -18,6 +18,7 @@ import {
   checkFromLocalStorage,
   toggleToLocalStorage,
 } from "../../../utils/globalFunctions";
+import { useAppContext } from "../../context/AppContext";
 
 interface ITypes {
   name: string;
@@ -76,11 +77,14 @@ const CardItem: React.FC<CardItemProps> = (props) => {
     setLiked(isLiked);
   }, []);
   //like function handler
+  const { setIsNoPokemonLiked } = useAppContext();
   const handleLike = () => {
     setLiked(!liked);
     toggleToLocalStorage(id);
     if (pathname === "/liked") {
       setIsVisible(false);
+      const parent = document.querySelector(".liked-wrapper");
+      if (parent?.childElementCount === 1) setIsNoPokemonLiked(true);
     }
   };
   const icons = useMemo(
