@@ -1,8 +1,4 @@
-import React, { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
-import ThumbUp from "../tools/ThumbUp";
-
+import styled, { keyframes } from 'styled-components';
 const hidenCard = keyframes`
   0% {
     display: flex;
@@ -17,11 +13,8 @@ const hidenCard = keyframes`
     opacity: 0;
   }
 `;
-interface ContainerProps {
-  opacity: number;
-  display: string;
-}
-const Container = styled.div<ContainerProps>`
+
+const Container = styled.div`
   width: 90vw;
   max-width: 307px;
   display: flex;
@@ -36,8 +29,8 @@ const Container = styled.div<ContainerProps>`
   padding: 25px 35px 25px 25px;
   box-sizing: border-box;
   position: relative;
-  opacity: ${({ opacity }) => opacity};
-  display: ${({ display }) => display};
+  opacity: 1;
+  display: flex;
   transition: all 350ms linear;
 `;
 const Left = styled.div`
@@ -128,77 +121,15 @@ const IconContainer = styled.div<IconContainerProps>`
     background: rgba(0, 0, 0, 0.5);
   }
 `;
-export type ITypes = {
-  name: string;
-  color: string;
-};
-type CardProps = {
-  img: string;
-  alt: string;
-  id: string;
-  name: string;
-  types: Array<ITypes>;
-};
-const Card: React.FC<CardProps> = (props) => {
-  const { img, alt, id, name, types } = props;
-
-  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.preventDefault();
-    e.currentTarget.src = `${process.env.PUBLIC_URL}/assets/mock/error404.png`;
-  };
-  const left = useMemo(
-    () => (
-      <Left>
-        <Image onError={handleError} src={img} alt={alt} />
-      </Left>
-    ),
-    [img, alt]
-  );
-  const rightTop = useMemo(
-    () => (
-      <RightTop>
-        <Id>{id}</Id>
-        <Name>{name}</Name>
-      </RightTop>
-    ),
-    [id, name]
-  );
-
-  const rightbottom = useMemo(
-    () => (
-      <RightBottom>
-        {types.map((type) => (
-          <Type key={type.name} bgColor={type.color}>
-            {type.name}
-          </Type>
-        ))}
-      </RightBottom>
-    ),
-    [types]
-  );
-  const [liked, setLiked] = useState(false);
-  const location = useLocation();
-  const [opacity, setOpacity] = useState(1);
-  const [display, setdisplay] = useState("flex");
-
-  const icons = useMemo(
-    () => (
-      <IconContainer onClick={() => {}} liked={liked}>
-        <ThumbUp liked={liked} />
-      </IconContainer>
-    ),
-    [liked]
-  );
-  return (
-    <Container opacity={opacity} display={display}>
-      {left}
-      <Right>
-        {rightTop}
-        {rightbottom}
-      </Right>
-      {icons}
-    </Container>
-  );
-};
-
-export default React.memo(Card);
+export {
+  Container,
+  Left,
+  Image,
+  Right,
+  RightTop,
+  Id,
+  Name,
+  RightBottom,
+  Type,
+  IconContainer,
+}

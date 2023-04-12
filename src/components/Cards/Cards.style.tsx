@@ -11,6 +11,15 @@ const Wrapper = styled.div`
   gap: 30px;
   justify-content: center;
   align-items: center;
+  :empty {
+    ::before {
+      margin-top: 110px;
+      content: "You haven't liked any Pokemon yet.";
+      font-size: 1.25rem;
+      opacity: 1;
+      transition: opacity 350ms linear;
+    }
+  }
 `;
 
 const NotFound = styled.h4`

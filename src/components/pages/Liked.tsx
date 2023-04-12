@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Cards from "../Cards";
-import { data } from "../../utils/globalFunctions";
+import LikedCard from "../Cards/LikedCard";
 
 const Liked = () => {
-  const [likedPokemons, setLikedPokemons] = useState<any[]>([]);
-
-  useEffect(() => {
-    // const ids = getFromLocalStorage("likedPokemons");
-    // if (ids?.length) {
-    //   const likedDB = filterPokemonsByIds(data, ids);
-    //   setLikedPokemons(likedDB);
-    // }
-  }, []);
-  return <Cards pokemonsList={likedPokemons} />;
+  return <LikedCard />;
 };
 
 export default Liked;

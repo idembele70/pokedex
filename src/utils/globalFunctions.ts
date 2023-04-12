@@ -99,21 +99,49 @@ const filterPokemonDataToCardProps = <T extends BasicDataProps>({ data, searchNa
   }
   return mapPokemonDataToCardProps(filteredPokemons);
 };
-/*
-const addToLocalStorage = (data) =>
-  localStorage.setItem("likedPokemons", JSON.stringify(data));
 
-const getFromLocalStorage = (name) => JSON.parse(localStorage.getItem(name));
+const localStorageKey = "likedPokemons"
 
-const filterPokemonsByIds = (d, ids) =>
-  d.filter((pokemon) => ids.includes(pokemon.id)); */
+const toggleToLocalStorage = (currentId: string) => {
+  const localStorageData = localStorage.getItem(localStorageKey)
+  const parsedData: string[] = localStorageData ? JSON.parse(localStorageData) : []
+  let updatedData: string[];
+  if (parsedData.includes(currentId))
+    updatedData = parsedData.filter(id => id !== currentId)
+  else
+    updatedData = [...parsedData, currentId]
+  localStorage.setItem(localStorageKey, JSON.stringify(updatedData));
+}
+
+const checkFromLocalStorage = (id: string): boolean => {
+  const localStorageData = localStorage.getItem(localStorageKey)
+  if (localStorageData) {
+    const parsedData: string[] = JSON.parse(localStorageData)
+    return parsedData.includes(id)
+  }
+  return false
+};
+interface filterByIdsProps<T> {
+  data: T[],
+  ids: string[]
+}
+const filterPokemonDataByIdsToCardProps =
+  <T extends BasicDataProps>({ data, ids }: filterByIdsProps<T>): PokemonItemProps[] => {
+    const filteredData = data.filter((pokemon) => ids.includes(pokemon.id));
+    return mapPokemonDataToCardProps(filteredData)
+
+  }
+const getLocalStorageData = (): string[] => {
+  const localStorageData = localStorage.getItem(localStorageKey)
+  if (localStorageData) return JSON.parse(localStorageData)
+  return []
+}
 
 export {
   mapPokemonDataToCardProps,
   filterPokemonDataToCardProps,
-  /* 
-  addToLocalStorage,
-  getFromLocalStorage,
-  filterPokemonsByIds,
-   */
+  toggleToLocalStorage,
+  checkFromLocalStorage,
+  filterPokemonDataByIdsToCardProps,
+  getLocalStorageData
 };

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { mobile } from "../../../utils/responsive";
+import { mobile } from "../../../styles/responsive";
 
 const Container = styled.form`
   display: flex;

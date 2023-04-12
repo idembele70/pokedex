@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { mobile } from "../../../utils/responsive";
+import { mobile } from "../../../styles/responsive";
 
 const Container = styled.header`
   padding: 30px 0;

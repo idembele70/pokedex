@@ -5,7 +5,7 @@ import {
   mapPokemonDataToCardProps,
 } from "../../utils/globalFunctions";
 import Loader from "../shared/Loader";
-import Card from "./Card";
+import CardItem from "./CardItem";
 import { Container, NotFound, Wrapper } from "./Cards.style";
 import { useSearchContext } from "../context/SearchContext";
 
@@ -15,9 +15,11 @@ const HomeCard = () => {
   const [loading, setLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
   const { searchTerm, searchName } = useSearchContext();
+  const [notFound, setNotFound] = useState(false);
   useEffect(() => {
     setLimit(0);
     setIsSearching(true);
+    setNotFound(false);
   }, [searchTerm]);
   // get pokemon list by search term or get all
   useEffect(() => {
@@ -34,6 +36,7 @@ const HomeCard = () => {
               { data, searchName, searchTerm }
             ).slice(0, limit + 15);
             setPokemonList(mappedData);
+            if (mappedData.length === 0) setNotFound(true);
           } else {
             // GET all Pokemons
             const mappedData: PokemonItemProps[] = mapPokemonDataToCardProps(
@@ -68,26 +71,16 @@ const HomeCard = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
-  // not found listenner
-  const [notFoundOpacity, setNotFoundOpacity] = useState(0);
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (!loading && pokemonList.length === 0)
-      timer = setTimeout(() => {
-        setNotFoundOpacity(1);
-      }, 400);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [loading]);
   return (
     <Container>
-      <Wrapper>
-        {!isSearching &&
-          pokemonList.map((props, idx) => <Card key={idx} {...props} />)}
-      </Wrapper>
+      {!loading && !isSearching && !notFound && (
+        <Wrapper>
+          {!isSearching &&
+            pokemonList.map((props, idx) => <CardItem key={idx} {...props} />)}
+        </Wrapper>
+      )}
       <Loader opacity={loading || isSearching} />
-      {pokemonList.length === 0 && !loading && !isSearching ? (
+      {(pokemonList.length === 0 || notFound) && !loading && !isSearching ? (
         <NotFound>
           Sorry but nothing matched your search terms. Please try again with
           some different keywords
