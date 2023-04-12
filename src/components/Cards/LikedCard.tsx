@@ -56,10 +56,14 @@ const LikedCard = () => {
   }, [handleScroll]);
   // check if there is no child
   const [notFound, setNotFound] = useState(false);
-  const { isNoPokemonLiked } = useAppContext();
+  const { isNoPokemonLiked, setCtxValue } = useAppContext();
   useEffect(() => {
     setNotFound(isNoPokemonLiked);
   }, [isNoPokemonLiked]);
+  // reset searchTerm
+  useEffect(() => {
+    setCtxValue("", "");
+  }, []);
   return (
     <Container>
       <Wrapper className="liked-wrapper">

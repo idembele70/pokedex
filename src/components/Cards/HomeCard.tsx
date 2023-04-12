@@ -72,6 +72,7 @@ const HomeCard = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
   return (
     <Container>
       <Wrapper>

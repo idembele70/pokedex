@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Liked from "../pages/Liked";
 import AppContextProvider from "../context/AppContext";
 
 const RouteWrapper = () => {
+  useEffect(() => {
+    console.log("new routes");
+  }, []);
   return (
     <AppContextProvider>
       <Routes>
