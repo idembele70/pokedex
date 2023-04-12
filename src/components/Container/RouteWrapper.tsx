@@ -5,9 +5,6 @@ import Liked from "../pages/Liked";
 import AppContextProvider from "../context/AppContext";
 
 const RouteWrapper = () => {
-  useEffect(() => {
-    console.log("new routes");
-  }, []);
   return (
     <AppContextProvider>
       <Routes>
