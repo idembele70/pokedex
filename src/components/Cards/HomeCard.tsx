@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   PokemonItemProps,
   filterPokemonDataToCardProps,
@@ -8,6 +14,7 @@ import Loader from "../shared/Loader";
 import CardItem from "./CardItem";
 import { Container, NotFound, Wrapper } from "./Cards.style";
 import { useAppContext } from "../context/AppContext";
+import { gsap } from "gsap";
 
 const HomeCard = () => {
   const [pokemonList, setPokemonList] = useState<PokemonItemProps[]>([]);
@@ -16,6 +23,7 @@ const HomeCard = () => {
   const [isSearching, setIsSearching] = useState(false);
   const { searchTerm, searchName, setIsNoPokemonLiked } = useAppContext();
   const [notFound, setNotFound] = useState(false);
+  // reset state onSearch
   useEffect(() => {
     setLimit(0);
     setIsSearching(true);
@@ -72,9 +80,19 @@ const HomeCard = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
-
+  // GSAP ScrollTrigger for Container
+  const containerEl = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const tween = gsap.from(containerEl.current, {
+      opacity: 0,
+      duration: 1,
+    });
+    return () => {
+      tween.scrollTrigger?.kill();
+    };
+  }, []);
   return (
-    <Container>
+    <Container ref={containerEl}>
       <Wrapper>
         {!isSearching &&
           pokemonList.map((props, idx) => <CardItem key={idx} {...props} />)}

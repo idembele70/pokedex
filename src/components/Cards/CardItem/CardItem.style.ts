@@ -1,18 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-const hidenCard = keyframes`
-  0% {
-    display: flex;
-    opacity: 1;
-  }
-  90% {
-    display: flex;
-    opacity: 0;
-  }
-  100% {
-    display: none;
-    opacity: 0;
-  }
-`;
+
 
 const Container = styled.div`
   width: 90vw;
@@ -29,9 +16,9 @@ const Container = styled.div`
   padding: 25px 35px 25px 25px;
   box-sizing: border-box;
   position: relative;
-  opacity: 1;
   display: flex;
   transition: all 350ms linear;
+  opacity: 0;
 `;
 const Left = styled.div`
   flex: 1;

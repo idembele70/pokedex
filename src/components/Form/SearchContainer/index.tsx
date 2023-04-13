@@ -1,8 +1,9 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useLayoutEffect, useRef } from "react";
 import { Container, Input, Right } from "./SearchContainer.style";
 import { useObservableCallback, useSubscription } from "observable-hooks";
 import { debounceTime, distinctUntilChanged, map, tap } from "rxjs";
 import { useAppContext } from "../../context/AppContext";
+import { gsap } from "gsap";
 
 const SearchContainer = () => {
   interface ISearch {
@@ -45,13 +46,24 @@ const SearchContainer = () => {
       distinctUntilChanged((prev, cur) => prev.value === cur.value)
     )
   );
-
+  // observable change listener
   const { setCtxValue } = useAppContext();
   useSubscription(search$, ({ value, name }) => {
     setCtxValue(value, name);
   });
+  // GSAP ScrollTrigger
+  const containerEl = useRef<HTMLFormElement>(null);
+  useLayoutEffect(() => {
+    const tween = gsap.from(containerEl.current, {
+      opacity: 0,
+      duration: 1,
+    });
+    return () => {
+      tween.scrollTrigger?.kill();
+    };
+  }, []);
   return (
-    <Container>
+    <Container ref={containerEl}>
       <Input
         name="name"
         type="search"

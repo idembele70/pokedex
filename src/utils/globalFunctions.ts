@@ -90,7 +90,7 @@ interface FilterOptions<T> {
 const filterPokemonDataToCardProps = <T extends BasicDataProps>({ data, searchName, searchTerm }: FilterOptions<T>): PokemonItemProps[] => {
   let filteredPokemons: T[] = [];
   if (searchName === "name") {
-    filteredPokemons = data.filter((p) => p.name.toLowerCase().includes(searchTerm));
+    filteredPokemons = data.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
   } else if (searchName === "number") {
     filteredPokemons = data.filter((p) => p.id.includes(searchTerm));
   } else if (searchName === "type") {

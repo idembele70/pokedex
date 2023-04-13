@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import ThumbUp from "../ThumbUp";
@@ -19,6 +25,7 @@ import {
   toggleToLocalStorage,
 } from "../../../utils/globalFunctions";
 import { useAppContext } from "../../context/AppContext";
+import { gsap } from "gsap";
 
 interface ITypes {
   name: string;
@@ -95,8 +102,19 @@ const CardItem: React.FC<CardItemProps> = (props) => {
     ),
     [liked]
   );
+  //GSAP ScrollTrigger
+  const containerEl = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const tween = gsap.to(containerEl.current, {
+      opacity: 1,
+      duration: 1,
+    });
+    return () => {
+      tween.scrollTrigger?.kill();
+    };
+  }, []);
   return isVisible ? (
-    <Container>
+    <Container ref={containerEl}>
       {left}
       <Right>
         {rightTop}
