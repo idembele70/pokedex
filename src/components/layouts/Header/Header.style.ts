@@ -53,7 +53,8 @@ const ScrollTopBtn = styled.button<ScrollTopBtnProps>`
   border-radius: 50%;
   position: fixed;
   bottom: 30px;
-  right: 10px;
+  right: 50%;
+  transform: translateX(-50%);
   padding: 0;
   cursor: pointer;
   transition: all 1s ease;
