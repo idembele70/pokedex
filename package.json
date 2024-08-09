@@ -4,6 +4,7 @@
   "homepage": "https://idembele70.github.io/pokedex/",
   "private": true,
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.6.5",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -14,7 +15,6 @@
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
-    "dotenv": "^16.4.5",
     "gh-pages": "^6.1.1",
     "gsap": "^3.11.5",
     "normalize.css": "^8.0.1",
@@ -34,7 +34,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "test:e2e:local": "dotenvx run -f env/env.local -- npx playwright test",
+    "test:e2e:dev": "dotenvx run -f env/env.development -- npx playwright test"
   },
   "eslintConfig": {
     "extends": [
