@@ -2,7 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       BASEURL: string;
-      CI: string | undefined;
+      LOCAL: string | undefined;
     }
   }
 }

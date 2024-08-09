@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+const { BASEURL:baseURL, LOCAL } = process.env;
 export default defineConfig({
   testDir: './e2e',
   /* Run tests in files in parallel */
@@ -12,7 +13,7 @@ export default defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: process.env.BASEURL,
+    baseURL,
     ...devices['Desktop Chrome'], ...devices['Desktop Firefox'], ...devices['Desktop Safari']
   },
 
@@ -54,11 +55,10 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: process.env.CI ?
-  undefined 
-  : {
+  webServer: LOCAL ? {
     command: 'npm run start',
     url: 'http://127.0.0.1:3000',
     reuseExistingServer: !process.env.CI,
-  },
+  } :
+    undefined,
 });
